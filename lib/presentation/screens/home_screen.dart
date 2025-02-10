@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/stock_bloc.dart';
-import 'price_graph_screen.dart'; // Screen to show the price graph
+import 'price_graph_screen.dart';
 
 class StockSearchScreen extends StatefulWidget {
   @override
@@ -13,7 +13,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
 
-  // Quick search keywords.
   final List<String> _keywords = [
     "Microsoft",
     "Nestle",
@@ -31,7 +30,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
     "HP"
   ];
 
-  // Debounce timer for search input.
   Timer? _debounceTimer;
 
   @override
@@ -54,7 +52,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
     });
   }
 
-  /// Build a keyword chip.
   Widget _buildKeywordChip(String keyword) {
     return ActionChip(
       label: Text(keyword, style: TextStyle(color: Colors.blue[900])),
@@ -66,7 +63,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
     );
   }
 
-  /// Build a stock card for search results.
   Widget _buildStockCard(dynamic stock) {
     return Card(
       elevation: 3,
@@ -85,10 +81,7 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
           stock['name'],
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        // subtitle: Text(
-        //   "Price: \$${stock['price']}",
-        //   style: TextStyle(color: Colors.green[700]),
-        // ),
+
         trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
         onTap: () {
           Navigator.push(
@@ -109,7 +102,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
     );
   }
 
-  /// Custom header with gradient background, title, search field, and keyword chips.
   Widget _buildHeader() {
     return Container(
       padding: EdgeInsets.all(16),
@@ -152,7 +144,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
             style: TextStyle(color: Colors.white),
           ),
           SizedBox(height: 12),
-          // Use Wrap to allow keywords to span multiple lines.
           Wrap(
             spacing: 8,
             runSpacing: 4,
@@ -163,7 +154,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
     );
   }
 
-  /// Attractive empty state widget when no search query is active.
   Widget _buildAttractiveEmptyState() {
     return Center(
       child: SingleChildScrollView(
@@ -191,8 +181,7 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
     );
   }
 
-  /// Builds the Popular USA Stocks section.
-  /// Only displays if matching stocks exist.
+
   Widget _buildUSAStocksSection(List<dynamic> stocks, {String? query}) {
     List<dynamic> usaStocks = stocks.where((stock) {
       final name = stock['name'].toString().toLowerCase();
@@ -210,7 +199,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
 
     if (usaStocks.isEmpty) return SizedBox.shrink();
 
-    // Limit the number of stocks to display.
     if (usaStocks.length > 12) {
       usaStocks = usaStocks.sublist(0, 12);
     }
@@ -231,7 +219,7 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: 2.5, // Adjust for desired row count.
+              childAspectRatio: 2.5,
             ),
             itemBuilder: (context, index) {
               final stock = usaStocks[index];
@@ -258,10 +246,7 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
                       textAlign: TextAlign.center,
                     ),
                     SizedBox(height: 4),
-                    // Text("\$${stock['price']}",
-                    //     style:
-                    //     TextStyle(fontSize: 12, color: Colors.green[700])),
-                  ],
+                     ],
                 ),
               );
             },
@@ -274,7 +259,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // No default AppBar; using a custom header.
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16),
@@ -285,7 +269,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
               Expanded(
                 child: BlocBuilder<StockBloc, StockState>(
                   builder: (context, state) {
-                    // When no search query is active.
                     if (_searchController.text.trim().isEmpty) {
                       if (state is StockLoading) {
                         return Center(child: CircularProgressIndicator());
@@ -295,7 +278,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
                             children: [
                               _buildAttractiveEmptyState(),
                               _buildUSAStocksSection(state.stocks),
-                              // You can add more sections here.
                             ],
                           ),
                         );
@@ -304,7 +286,6 @@ class _StockSearchScreenState extends State<StockSearchScreen> {
                       }
                       return _buildAttractiveEmptyState();
                     }
-                    // When there is a search query, show search results and updated USA stocks.
                     else {
                       if (state is StockLoading) {
                         return Center(child: CircularProgressIndicator());

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
-import 'home_screen.dart'; // Or StockSearchScreen if that's your target screen
+import 'home_screen.dart';
 import '../../core/constants/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -40,7 +40,6 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Top animated section
               Container(
                 height: 400,
                 decoration: BoxDecoration(

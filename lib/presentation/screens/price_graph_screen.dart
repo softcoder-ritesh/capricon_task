@@ -30,16 +30,13 @@ class PriceGraphScreen extends StatefulWidget {
 }
 
 class _PriceGraphScreenState extends State<PriceGraphScreen> {
-  // The currently selected range.
-  String selectedRange = "1M"; // default range
+  String selectedRange = "1M";
 
   late PriceGraphBloc _priceGraphBloc;
   late TransformationController _transformationController;
 
-  // Cache for the latest loaded data.
   List<dynamic>? cachedData;
 
-  // Timeout flag & timer.
   bool _hasTimedOut = false;
   Timer? _timeoutTimer;
 
@@ -50,7 +47,6 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
     _fetchGraphData();
     _startTimeoutTimer();
     _transformationController = TransformationController();
-    // Lock vertical translation by resetting dy.
     _transformationController.addListener(() {
       Matrix4 current = _transformationController.value;
       if (current.storage[13] != 0) {
@@ -87,7 +83,6 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
     super.dispose();
   }
 
-  // When a new range is selected, update state and fetch new data.
   void _onRangeSelected(String range) {
     if (range != selectedRange) {
       setState(() {
@@ -98,7 +93,6 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
     }
   }
 
-  // Build a row of range selection buttons.
   Widget _buildRangeSelector() {
     final List<String> ranges = ["1D", "1W", "1M", "1Y", "5Y"];
     return Row(
@@ -127,7 +121,6 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
     );
   }
 
-  // Choose date format based on the selected range.
   DateFormat _getDateFormat() {
     if (selectedRange == "1D" || selectedRange == "1W") {
       return DateFormat.Hm(); // e.g., "14:30"
@@ -136,7 +129,6 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
     }
   }
 
-  // Build a fixed left Y-axis widget.
   Widget _buildYAxis(double minY, double maxY) {
     int labelCount = 5;
     double step = (maxY - minY) / (labelCount - 1);
@@ -199,7 +191,6 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
     );
   }
 
-  // Build an error widget with a refresh button.
   Widget _buildErrorWidget(String message) {
     return Center(
       child: Column(
@@ -231,8 +222,7 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap entire content in a SingleChildScrollView so the page is scrollable
-    // if content overflows vertically.
+
     return BlocProvider<PriceGraphBloc>.value(
       value: _priceGraphBloc,
       child: Scaffold(
@@ -342,7 +332,6 @@ class _PriceGraphScreenState extends State<PriceGraphScreen> {
                   SizedBox(height: 16),
                   _buildRangeSelector(),
                   SizedBox(height: 20),
-                  // Chart area: fixed height with InteractiveViewer.
                   SizedBox(
                     height: 300,
                     child: LayoutBuilder(
